@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: url-shortener-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: url_shortener
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  tomcat:
+    container_name: url-shortener-tomcat
+    build:
+      context: .
+      dockerfile: tomcat/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
